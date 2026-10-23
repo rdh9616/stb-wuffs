@@ -1,0 +1,11 @@
+*.h text eol=lf
+*.c text eol=lf
+*.cpp text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.txt text eol=lf
+LICENSE text eol=lf
+vendor/WUFFS-LICENSE-* text eol=lf
+tests/fixtures/* binary

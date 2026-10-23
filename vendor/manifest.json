@@ -1,0 +1,12 @@
+{
+  "stb_commit": "003501f6d7a8668ce8b6d875e34dd97ad0d5d5b5",
+  "wuffs_commit": "4be865da258c4b5e6d3e716fd4f36be016496a46",
+  "stb_version": "2.30",
+  "wuffs_version": "0.4.0-alpha.12+4048.20261020",
+  "sha256": {
+    "stb_image.h": "594c2fe35d49488b4382dbfaec8f98366defca819d916ac95becf3e75f4200b3",
+    "WUFFS-LICENSE-APACHE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+    "WUFFS-LICENSE-MIT": "bb811a4b485eac3caeb8bdc58bbafb355fbcb6116010a7ea9179e5c70b0bc878",
+    "wuffs-v0.4.c": "458066457347bd6d9bc3c906aa8292bea4488577727569ddd9436fdd89d5f04d"
+  }
+}
