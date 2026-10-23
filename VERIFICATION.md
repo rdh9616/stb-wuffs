@@ -14,4 +14,6 @@ Local platform: Windows x64, MSVC 19.39.33523.0, CMake 3.29.2, Python 3.12.3.
 - Header generation is deterministic and verifies pristine vendor SHA-256 hashes.
 - Local MSVC AddressSanitizer initially stopped before `main` with an interception-runtime failure, both sandboxed and outside the sandbox. With the runtime's `ASAN_WIN_CONTINUE_ON_INTERCEPTION_FAILURE=1` setting, the fixture/truncation harness and 1,000 deterministic random inputs passed. This is a limited local sanitizer result because interception coverage was reduced. The committed Linux CI sanitizer job runs AddressSanitizer, leak checking and UBSan without that workaround.
 
-Cross-platform CI results are available in the repository's Actions tab after publication. They must not be inferred from the local Windows result. No performance benchmark or exhaustive fuzzing result is claimed.
+Cross-platform CI passed for code commit `16aa2e7bc769e6e2b83834a3d9e4cb16571f451d` on 2026-10-23: all 26 CTest tests on Windows, Linux and macOS, plus the separate Linux AddressSanitizer/UBSan job with leak checking enabled and no interception workaround. See the [completed CI run](https://github.com/rdh9616/stb-wuffs/actions/runs/40003233535).
+
+Python Black and C/C++ clang-format checks passed locally. No performance benchmark or exhaustive fuzzing result is claimed.
