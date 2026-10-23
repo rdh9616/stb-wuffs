@@ -167,4 +167,14 @@ pic = (
 pic += bytes([0, 8, 0, 0xE0]) + rgb.tobytes()
 (OUT / "tiny.pic").write_bytes(pic)
 (OUT / "low-max.pgm").write_bytes(b"P5\n3 2\n100\n" + bytes([0, 20, 40, 60, 80, 100]))
+packed_tga = bytearray(18)
+packed_tga[2], packed_tga[12], packed_tga[14] = 2, 8, 1
+packed_tga[16], packed_tga[17] = 16, 32
+(OUT / "packed16.tga").write_bytes(
+    bytes(packed_tga) + struct.pack("<8H", 0, 1, 2, 3, 4, 7, 15, 31)
+)
+partial_gif = bytearray((OUT / "still.gif").read_bytes())
+partial_gif[6:8] = struct.pack("<H", 9)
+partial_gif[11] = 1
+(OUT / "partial-background.gif").write_bytes(partial_gif)
 print(f"generated {len(list(OUT.iterdir()))} fixtures")

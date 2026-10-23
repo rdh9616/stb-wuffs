@@ -1,7 +1,9 @@
 """Compare public stb API results with the pinned upstream implementation."""
 
 import ctypes as C
+import math
 from pathlib import Path
+import struct
 import sys
 import zlib
 
@@ -188,7 +190,25 @@ def main():
                         actual = adapter.load(data, req, mode)
                         equivalent(actual, expected, path.name, mode)
                         other = cpp.load(data, req, mode)
-                        assert actual == other, f"{path.name}: C/C++ differ"
+                        if mode != 2 or actual is None or other is None:
+                            assert (
+                                actual == other
+                            ), f"{path.name}: C/C++ differ (mode={mode}, req={req})"
+                        else:
+                            assert actual[:3] == other[:3] and actual[4] == other[4]
+                            # math.h exposes different pow overloads in C and C++
+                            # on some libcs. Pixels still match exactly before
+                            # the shared stb integer-to-float transfer function.
+                            va = struct.unpack(
+                                "=" + "f" * (len(actual[3]) // 4), actual[3]
+                            )
+                            vb = struct.unpack(
+                                "=" + "f" * (len(other[3]) // 4), other[3]
+                            )
+                            assert all(
+                                math.isclose(v, w, rel_tol=2e-7, abs_tol=1e-9)
+                                for v, w in zip(va, vb)
+                            ), f"{path.name}: C/C++ float difference exceeds rounding tolerance (req={req}, max={max(abs(v-w) for v,w in zip(va,vb))})"
                         if flip == 0:
                             for source in ("callbacks", "file", "filename"):
                                 actual = adapter.load(data, req, mode, source, path)

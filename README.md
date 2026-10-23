@@ -28,7 +28,7 @@ The complete upstream public API is retained: 8-bit, 16-bit and floating-point l
 | 16-bit source images | stb, preserving source precision |
 | HDR, PSD, Softimage PIC | stb |
 | Animated-GIF all-frames API | stb, with disposal and flip fixes |
-| APNG default image, color-key PNG transparency, BMP alpha semantics, CgBI, Wuffs rejections | stb compatibility fallback |
+| APNG default image, color-key PNG transparency, BMP alpha, partial first GIF frames, packed RGB TGA, CgBI, Wuffs rejections | stb compatibility fallback |
 | Metadata, probes and zlib/deflate helper APIs | stb |
 
 The aim is **complete API and format coverage**, not a promise that two independent decoders produce identical results on every possible byte stream. JPEG IDCT, chroma interpolation, CMYK conversion and incomplete progressive scans can produce different pixel values. Define `STBI_WUFFS_EXACT_JPEG` to retain stb's JPEG decoder. Malformed inputs can also have decoder-specific behavior. Error strings are diagnostic text, not a stable protocol.
@@ -74,7 +74,7 @@ ctest --test-dir build -C Release --output-on-failure
 
 Python 3 is needed only for development tests and header generation. Test fixtures are committed; Pillow is needed only to regenerate them using `tests/make_fixtures.py`. The application itself has no Python dependency.
 
-Tests compare C and C++ builds with the unmodified pinned stb header, exercise channel counts 0–4 and vertical flipping, and compare memory/callback/file/filename loading at all three output precisions. They also cover allocation failures, short reads, metadata offsets, gamma and iPhone settings, animated-GIF delays/disposal, TLS, public exports, header reproducibility, static linkage and compile-time options. Lossless image output is compared byte for byte. JPEG comparisons check API results and C/C++ agreement; they do not assert equality with stb pixels.
+Tests compare C and C++ builds with the unmodified pinned stb header, exercise channel counts 0–4 and vertical flipping, and compare memory/callback/file/filename loading at all three output precisions. They also cover allocation failures, short reads, metadata offsets, gamma and iPhone settings, animated-GIF delays/disposal, TLS, public exports, header reproducibility, static linkage and compile-time options. Lossless output from the C implementation is compared byte for byte with stb. C/C++ integer results must match exactly; floating-point results allow small math-library rounding differences (relative tolerance 2e-7, absolute tolerance 1e-9). JPEG comparisons check API results and C/C++ agreement; they do not assert equality with stb pixels.
 
 The differential runner can additionally consume the pinned Wuffs test corpus:
 

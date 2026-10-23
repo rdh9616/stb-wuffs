@@ -106811,6 +106811,9 @@ static int stbi__wuffs_gif_initial_clear(const stbi_uc *p, size_t n)
          unsigned bits, value = 0, count = 0;
          if (n - i < 10)
             return 0;
+         /* Partial first frames have different background-fill semantics. */
+         if (p[i + 1] || p[i + 2] || p[i + 3] || p[i + 4] || memcmp(p + i + 5, p + 6, 4) != 0)
+            return 0;
          if (p[i + 9] & 128)
          {
             size_t palette = (size_t)3 << ((p[i + 9] & 7) + 1);
@@ -106962,6 +106965,11 @@ static stbi_uc *stbi__wuffs_try(stbi__wuffs_input *in, int kind, int *x, int *y,
       goto fail;
    /* BMP's unused fourth byte is treated as alpha by stb, but not Wuffs. */
    if (kind == 2 && channels == 4)
+      goto fail;
+   /* Packed TGA RGB expands five-bit values differently in the two decoders. */
+   if (kind == 6 && in->length >= 18 &&
+       (((in->data[2] == 2 || in->data[2] == 10) && in->data[16] <= 16) ||
+        (in->data[1] == 1 && in->data[7] <= 16)))
       goto fail;
    if (width <= 0 || height <= 0 || width > STBI_MAX_DIMENSIONS || height > STBI_MAX_DIMENSIONS ||
        (uint32_t)width != wuffs_base__pixel_config__width(&ic.pixcfg) ||
